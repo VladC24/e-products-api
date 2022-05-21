@@ -2,10 +2,10 @@ package controllers
 
 import play.api.mvc._
 import client.ProductClient
+import io.circe.Json
 import io.circe.generic.auto._
 import io.circe.syntax._
 import models.Product
-import io.circe.jawn.decode
 import play.api.libs.circe.Circe
 import repositories.ProductRepository
 
@@ -23,7 +23,7 @@ class ProductController @Inject()(productRepository: ProductRepository, productC
     }
   }
 
-  def addProduct = Action.async(circe.json) { implicit request =>
+  def addProduct(): Action[Json] = Action.async(circe.json) { implicit request =>
     val jsonRequest = request.body.as[Product]
     jsonRequest match {
       case Left(value) => Future.successful(BadRequest(s"This: $value failed"))
@@ -33,7 +33,7 @@ class ProductController @Inject()(productRepository: ProductRepository, productC
     }
   }
 
-  def findProduct(id: Int) = Action.async {implicit request =>
+  def findProduct(id: Int): Action[AnyContent] = Action.async { implicit request =>
     productRepository.findProductById(id).map { product =>
       val jsonProduct = product.asJson
       Ok(jsonProduct)

@@ -12,8 +12,7 @@ import scala.concurrent._
 class ProductClient @Inject()(ws: WSClient) {
 
   def getProducts: Future[List[Product]] = {
-    val url = s"https://fakestoreapi.com/products"
-    // try to call this
+    val url = "https://fakestoreapi.com/products"
     val request = ws.url(url)
     val response = request.get()
     val newProduct = response.map { x =>
